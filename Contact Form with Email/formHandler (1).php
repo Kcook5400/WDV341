@@ -21,30 +21,40 @@ $from = $_POST['email'];
 $firstName =  $_POST['fname'];
 $lastName = $_POST['lname'];
 $comment = $_POST['comments'];
+$UserSubject = 'Contact Submission';
 
 
-// Create email headers
+// Create email headers for me and user
 $headers  = 'MIME-Version: 1.0' . "\r\n";
 $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 $headers .= 'From:'.$from. "\r\n";
-$headers .= 'Cc:'.$from . "\r\n";
+
+$Userheaders  = 'MIME-Version: 1.0' . "\r\n";
+$Userheaders .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+$Userheaders .= 'From:'.$to. "\r\n";
 
 
-// Compose a simple HTML email message
+// Compose a message to be emailed to me
 $message = '<html><body><br>
   <div class="card-body">';
 $message .= '<p> On '.$date.' <br><br> <strong>'.$firstName.', '.$lastName.' </strong> sent the following message:</p>
 <br><p><em> '.$comment.'</em></p><br>
-
-
-
-<p> Thank you for your message <strong>'.$firstName.'</strong>! <br><br> Someone will be in contact soon! </p>
+<p> Please add them to your task list </p>
 </body></html>';
+// Compose a message to be emailed to the user
+$Usermessage = '<html><body><br>
+  <div class="card-body">';
+$Usermessage .= '<p> On '.$date.' <br><br> We recieved the following message:</p>
+<br><p><em> '.$comment.'</em></p><br><p> <strong>Your message has been sent to our team and someone will be in contact shortly!</strong></p><br>';
+
 
 $formattedMessage = wordwrap($message,60,"\n");
-
+$formattedUserMessage = wordwrap($Usermessage,60,"\n");
 // Sending email
-if(mail($to, $subject, $formattedMessage, $headers)){?>
+if(mail($to, $subject, $formattedMessage, $headers)){
+mail($from, $UserSubject, $formattedUserMessage, $Userheaders);
+
+?>
 
 <div class="container d flex justify-content-center">
 
